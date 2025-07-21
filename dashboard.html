@@ -14,16 +14,7 @@
             --secondary-text: #a8a8a8;
             --positive-green: #059669;
             --negative-red: #DC2626;
-            --warning-bg: #4d3800;
-            --warning-text: #ffeb87;
-            --border-color: #2d2d2d;
-            --bronze: #cd7f32;
-            --silver: #c0c0c0;
-            --gold: #ffd700;
-            --platinum: #e5e4e2;
-            --diamond: #b9f2ff;
         }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: #2a2a2a;
@@ -35,10 +26,8 @@
             min-height: 100vh;
             padding: 20px;
             box-sizing: border-box;
-            /* MODIFIED: Initially hidden to prevent content flash */
             visibility: hidden;
         }
-
         .mobile-mockup {
             width: 100%;
             height: 100%;
@@ -53,7 +42,6 @@
             padding: 5px;
             box-sizing: border-box;
         }
-
         .mobile-mockup .screen {
             width: 100%;
             height: 100%;
@@ -62,7 +50,6 @@
             overflow: hidden;
             position: relative;
         }
-        
         .mobile-mockup .notch {
              width: 160px;
              height: 30px;
@@ -74,7 +61,6 @@
              transform: translateX(-50%);
              z-index: 99;
         }
-
         .wallet-container {
             height: 100%;
             overflow-y: auto;
@@ -82,39 +68,14 @@
             box-sizing: border-box;
         }
         .wallet-container::-webkit-scrollbar { display: none; }
-        
         .top-header { padding: 10px 0; }
         .menu-button { background: none; border: none; color: var(--primary-text); font-size: 22px; cursor: pointer; }
         .top-bar-box { background-color: var(--background-dark); padding: 20px; border-radius: 12px; text-align: center; margin-top: 10px; margin-bottom: 24px; border: 1px solid var(--border-color); }
-        .top-balance-amount { font-size: 28px; font-weight: 600; margin: 0 0 8px 0; color: var(--primary-text); }
-        .top-bonus-balance { font-size: 16px; color: var(--secondary-text); margin-bottom: 16px; cursor: pointer; }
+        .balance-label { font-size: 14px; color: var(--secondary-text); margin: 0; }
+        .main-balance-amount { font-size: 28px; font-weight: 600; margin: 0 0 8px 0; color: var(--primary-text); }
+        .bonus-balance-amount { font-size: 16px; color: var(--secondary-text); margin-bottom: 16px; cursor: pointer; }
         .top-buttons-container { display: flex; justify-content: center; gap: 12px; }
         .top-action-btn { background-color: var(--surface-light); color: var(--primary-text); border: none; padding: 12px 20px; font-size: 15px; font-weight: bold; border-radius: 8px; cursor: pointer; flex-grow: 1; }
-        .assets-list { margin-bottom: 32px; display: flex; flex-direction: column; }
-        .asset-item { background: transparent; border: none; border-bottom: 1px solid var(--border-color); width: 100%; font: inherit; color: inherit; text-align: left; padding: 16px 0; display: flex; align-items: center; cursor: pointer; gap: 16px; }
-        .asset-item:last-child { border-bottom: none; }
-        .asset-icon { font-size: 18px; width: 35px; height: 35px; display: flex; justify-content: center; align-items: center; background-color: var(--surface-dark); border-radius: 50%; flex-shrink: 0; }
-        .asset-info { flex-grow: 1; }
-        .asset-name { font-size: 18px; font-weight: 500; }
-        .asset-balance { font-size: 14px; color: var(--secondary-text); margin-top: 4px; }
-        .asset-item .fa-chevron-right { color: var(--secondary-text); font-size: 14px; margin-left: auto; }
-        
-        .manage-button { width: 100%; background-color: var(--surface-light); color: var(--primary-text); border: none; padding: 16px; font-size: 16px; font-weight: bold; border-radius: 8px; margin-top: 16px; cursor: pointer; }
-        
-        .crypto-market-section { margin-top: 24px; }
-        .crypto-market-section h2 { font-size: 20px; margin-bottom: 16px; padding-left: 8px; }
-        .crypto-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-        .crypto-card { display: flex; flex-direction: column; gap: 8px; background-color: var(--surface-dark); padding: 16px; border-radius: 12px; }
-        .crypto-card-header { display: flex; align-items: center; gap: 8px; }
-        .crypto-logo { width: 24px; height: 24px; }
-        .crypto-symbol { font-size: 16px; font-weight: 600; text-transform: uppercase; }
-        .crypto-price { font-size: 18px; font-weight: 500; }
-        .crypto-change { font-size: 14px; font-weight: 500; }
-
-        .positive { color: var(--positive-green); }
-        .negative { color: var(--negative-red); }
-
-        /* --- MODAL STYLES --- */
         .modal { display: none; position: absolute; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); justify-content: center; align-items: center; padding: 16px; box-sizing: border-box; }
         .modal.show { display: flex; }
         .modal-content { background-color: var(--surface-dark); padding: 20px; border-radius: 16px; width: 100%; max-width: 450px; display: flex; flex-direction: column; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
@@ -122,47 +83,19 @@
         .modal-header h2 { margin: 0; font-size: 20px; }
         .modal-close-btn { font-size: 28px; font-weight: bold; cursor: pointer; color: var(--secondary-text); position: absolute; top: 10px; right: 20px; }
         .modal-list { list-style: none; padding: 0; margin: 0; }
-        .modal-list li { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border-color); gap: 16px; }
+        .modal-list li { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border-color); gap: 16px; cursor: pointer; }
         .modal-list li:last-child { border-bottom: none; }
         .modal-list .item-info { flex-grow: 1; }
         .modal-list .item-name { font-weight: bold; }
-        
         .modal.sidebar { justify-content: flex-start; align-items: flex-start; background-color: rgba(0,0,0,0.5); }
         .modal.sidebar .modal-content { width: 75%; max-width: 350px; height: 100%; border-radius: 0; transform: translateX(-100%); transition: transform 0.3s ease-in-out; }
         .modal.sidebar.show .modal-content { transform: translateX(0); }
-        .modal.slide-from-right { justify-content: flex-end; align-items: flex-start; }
-        .modal.slide-from-right .modal-content { width: 75%; max-width: 350px; height: 100%; border-radius: 0; transform: translateX(100%); transition: transform 0.3s ease-in-out; }
-        .modal.slide-from-right.show .modal-content { transform: translateX(0); }
-        .modal.slide-from-top { justify-content: center; align-items: flex-start; }
-        .modal.slide-from-top .modal-content { width: 100%; transform: translateY(-100%); transition: transform 0.3s ease-in-out; margin-top: 20px; border-radius: 16px 16px 0 0; }
-        .modal.slide-from-top.show .modal-content { transform: translateY(0); }
-        
-        .sidebar-list-item { cursor: pointer; }
-        .sidebar-list-item .item-info { padding-left: 16px; }
-        .sidebar-list-item .item-name { font-size: 14px; word-break: break-all; }
-        .transaction-view .message, .transaction-view .transaction-item { padding: 20px; text-align: center; font-size: 16px; }
-        .vip-icon.bronze { color: var(--bronze); } .vip-icon.silver { color: var(--silver); } .vip-icon.gold { color: var(--gold); } .vip-icon.platinum { color: var(--platinum); } .vip-icon.diamond { color: var(--diamond); }
-        .vip-list-item .item-info { font-size: 14px; }
-        .modal-warning { background-color: var(--warning-bg); color: var(--warning-text); padding: 12px; border-radius: 8px; font-size: 14px; line-height: 1.4; margin-bottom: 20px; border: 1px solid var(--warning-text); }
-        .deposit-info { margin-top: 16px; font-size: 16px; line-height: 1.5; }
         .deposit-address-container { display: flex; align-items: center; gap: 12px; background-color: var(--background-dark); padding: 12px; border-radius: 8px; margin-top: 8px; flex-wrap: wrap; }
         .address-text { word-break: break-all; flex: 1; }
         .copy-btn { background-color: var(--surface-light); color: var(--primary-text); border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; }
-        #paypal-generator .fa-spinner { font-size: 24px; animation: spin 1.5s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .form-input { width: 100%; background-color: var(--background-dark); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; font-size: 16px; color: var(--primary-text); box-sizing: border-box; margin-bottom: 16px; }
-        .form-prompt { display: none; margin-bottom: 16px; font-size: 14px; }
+        .form-input { width: 100%; background-color: var(--background-dark); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; font-size: 16px; color: var(--primary-text); box-sizing: border-box; margin-top: 16px; margin-bottom: 16px; }
         .greeting-toast { position: fixed; top: 70px; left: 50%; transform: translateX(-50%); background-color: rgba(44, 44, 46, 0.9); color: var(--primary-text); padding: 12px 24px; border-radius: 20px; z-index: 2000; opacity: 0; transition: opacity 0.5s ease-in-out, top 0.5s ease-in-out; pointer-events: none; font-size: 16px; font-weight: 500; text-align: center; }
         .greeting-toast.show { top: 85px; opacity: 1; }
-
-        @media (max-width: 480px) {
-            body { padding: 0; }
-            .mobile-mockup { width: 100vw; height: 100vh; max-width: none; max-height: none; border-radius: 0; border: none; padding: 0; }
-            .mobile-mockup .screen { border-radius: 0; }
-            .mobile-mockup .notch { top: 0; }
-            .greeting-toast { top: 20px; }
-            .greeting-toast.show { top: 40px; }
-        }
     </style>
 </head>
 <body>
@@ -176,9 +109,11 @@
                 <div class="top-header">
                     <button id="menu-btn" class="menu-button"><i class="fa-solid fa-bars"></i></button>
                 </div>
+                
                 <div class="top-bar-box">
-                    <div class="top-balance-amount">$0.00</div>
-                    <div class="top-bonus-balance">Bonus: $300.00</div>
+                    <p class="balance-label">Main Balance</p>
+                    <div id="main-balance" class="main-balance-amount">$0.00</div>
+                    <p id="bonus-balance" class="bonus-balance-amount">Bonus: $0.00</p>
                     <div class="top-buttons-container">
                         <button id="top-deposit-btn" class="top-action-btn">Deposit</button>
                         <button id="top-withdraw-btn" class="top-action-btn">Withdraw</button>
@@ -186,228 +121,174 @@
                     </div>
                 </div>
                 
-                <div class="assets-list">
-                    <button id="crypto-asset-btn" class="asset-item"><div class="asset-icon"><i class="fa-solid fa-chart-line"></i></div><div class="asset-info"><div class="asset-name">Crypto</div><div class="asset-balance">$0.00</div></div><i class="fa-solid fa-chevron-right"></i></button>
-                    <button id="cash-asset-btn" class="asset-item"><div class="asset-icon"><i class="fa-solid fa-dollar-sign"></i></div><div class="asset-info"><div class="asset-name">Cash</div><div class="asset-balance">$0.00</div></div><i class="fa-solid fa-chevron-right"></i></button>
+                 <div id="menu-modal" class="modal sidebar">
+                    <div class="modal-content">
+                        <div class="modal-header"><h2>Menu</h2><span class="modal-close-btn">&times;</span></div>
+                        <ul class="modal-list">
+                            <li id="menu-refer-btn"><i class="fa-solid fa-share-nodes asset-icon"></i><div class="item-info"><div class="item-name">Refer a Friend</div></div></li>
+                            <li id="menu-referrals-count"><i class="fa-solid fa-users asset-icon"></i><div class="item-info"><div class="item-name">Your Referrals: <span id="referral-count">0</span></div></div></li>
+                            <li id="menu-pending-tx"><i class="fa-solid fa-hourglass-half asset-icon"></i><div class="item-info"><div class="item-name">Pending Transactions</div></div></li>
+                            <li id="menu-successful-tx"><i class="fa-solid fa-check-circle asset-icon"></i><div class="item-info"><div class="item-name">Successful Transactions</div></div></li>
+                            <li id="menu-logout-btn"><i class="fa-solid fa-right-from-bracket asset-icon"></i><div class="item-info"><div class="item-name">Log Out</div></div></li>
+                        </ul>
+                    </div>
                 </div>
-        
-                <hr style="border-color: var(--border-color); border-style: solid; margin: 32px 0;">
-        
-                <section class="watchlist-section">
-                    <button id="manage-assets-btn" class="manage-button">Manage your assets</button>
-                </section>
 
-                <section class="crypto-market-section">
-                    <h2>Markets</h2>
-                    <div id="crypto-grid" class="crypto-grid"></div>
-                </section>
-            </div>
-            
-            <div id="menu-modal" class="modal sidebar">
-                <div class="modal-content">
-                    <div class="modal-header"><h2>Menu</h2><span class="modal-close-btn">&times;</span></div>
-                    <ul class="modal-list">
-                        <li id="menu-pending-tx" class="sidebar-list-item"><i class="fa-solid fa-hourglass-half asset-icon"></i><div class="item-info"><div class="item-name">Pending Transactions</div></div></li>
-                        <li id="menu-successful-tx" class="sidebar-list-item"><i class="fa-solid fa-check-circle asset-icon"></i><div class="item-info"><div class="item-name">Successful Transactions</div></div></li>
-                        <li id="menu-logout-btn" class="sidebar-list-item"><i class="fa-solid fa-right-from-bracket asset-icon"></i><div class="item-info"><div class="item-name">Log Out</div></div></li>
-                    </ul>
+                <div id="referral-modal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header"><h2>Refer a Friend</h2><span class="modal-close-btn">&times;</span></div>
+                        <p style="color: var(--secondary-text); font-size: 14px; line-height: 1.5; margin-bottom: 16px;">Share this link with your friends. When they sign up and make their first deposit of at least $50, you both earn a bonus!</p>
+                        <div class="deposit-address-container">
+                            <span id="referral-link-text" class="address-text">Loading your link...</span>
+                            <button class="copy-btn" data-copy-target="referral-link-text">Copy</button>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div id="pending-tx-modal" class="modal sidebar"><div class="modal-content transaction-view"><div class="modal-header"><h2>Pending Transactions</h2><span class="modal-close-btn">&times;</span></div><p class="message">No pending transactions.</p></div></div>
-            <div id="successful-tx-modal" class="modal sidebar"><div class="modal-content transaction-view"><div class="modal-header"><h2>Successful Transactions</h2><span class="modal-close-btn">&times;</span></div><div class="transaction-item">Welcome Bonus: +$300.00</div></div></div>
-            <div id="vip-modal" class="modal sidebar"><div class="modal-content"><div class="modal-header"><h2>Become a VIP</h2><span class="modal-close-btn">&times;</span></div><ul class="modal-list"><li class="vip-list-item"><i class="fa-solid fa-medal vip-icon bronze"></i><div class="item-info"><strong>Bronze:</strong> $30-$99 up to 20%</div></li><li class="vip-list-item"><i class="fa-solid fa-medal vip-icon silver"></i><div class="item-info"><strong>Silver:</strong> $100-$199 up to 50%</div></li><li class="vip-list-item"><i class="fa-solid fa-medal vip-icon gold"></i><div class="item-info"><strong>Gold:</strong> $200-$499 up to 75%</div></li><li class="vip-list-item"><i class="fa-solid fa-medal vip-icon platinum"></i><div class="item-info"><strong>Platinum:</strong> $500-$1,000 up to 100%</div></li><li class="vip-list-item"><i class="fa-solid fa-gem vip-icon diamond"></i><div class="item-info"><strong>Diamond:</strong> $1,001-$5,000 100% and x3</div></li></ul></div></div>
-            <div id="manage-assets-modal" class="modal sidebar"><div class="modal-content"><div class="modal-header"><h2>Manage Your Assets</h2><span class="modal-close-btn">&times;</span></div><ul class="modal-list"><li><i class="fa-brands fa-btc asset-icon"></i><div class="item-info"><div class="item-name">BTC Balance</div>$0.00</div></li><li><i class="fa-brands fa-ethereum asset-icon"></i><div class="item-info"><div class="item-name">ETH Balance</div>$0.00</div></li></ul></div></div>
-            <div id="deposit-modal" class="modal slide-from-top"><div class="modal-content"><div class="modal-header"><h2>Deposit</h2><span class="modal-close-btn">&times;</span></div><button id="crypto-deposit-option-btn" class="manage-button">Crypto Deposit</button><button id="cash-deposit-option-btn" class="manage-button" style="margin-top: 12px;">Cash Deposit</button></div></div>
-            <div id="crypto-deposit-modal" class="modal slide-from-right"><div class="modal-content"><div class="modal-header"><h2>Deposit BTC</h2><span class="modal-close-btn">&times;</span></div><div class="deposit-info">Send BTC to the following address:</div><div class="deposit-address-container"><span id="btc-address" class="address-text">bc1q2xmrxqs3djlznmxy394u67sskvf705r05j8lus</span><button class="copy-btn" data-copy-target="btc-address">Copy</button></div></div></div>
-            <div id="cash-deposit-modal" class="modal slide-from-right"><div class="modal-content"><div class="modal-header"><h2>Cash Deposit</h2><span class="modal-close-btn">&times;</span></div><button id="wire-transfer-option-btn" class="manage-button">Wire Transfer</button><button id="paypal-option-btn" class="manage-button" style="margin-top: 12px;">Generate Temporary PayPal</button></div></div>
-            <div id="wire-transfer-modal" class="modal"><div class="modal-content"><div class="modal-header"><h2>Wire Transfer Details</h2><span class="modal-close-btn">&times;</span></div><div class="deposit-address-container"><span class="address-text">Account: <strong id="account-num">210144611341</strong></span><button class="copy-btn" data-copy-target="account-num">Copy</button></div><div class="deposit-address-container" style="margin-top: 12px;"><span class="address-text">Routing: <strong id="routing-num">101019644</strong></span><button class="copy-btn" data-copy-target="routing-num">Copy</button></div></div></div>
-            <div id="paypal-generator-modal" class="modal"><div class="modal-content" style="text-align: center;"><div class="modal-header"><h2>PayPal Deposit</h2><span class="modal-close-btn">&times;</span></div><div id="paypal-generator"><p>Generating...</p><i class="fa-solid fa-spinner"></i></div><div id="paypal-result" style="display: none;"><div class="deposit-address-container"><span class="address-text">sbafg8461temp@outlook.com</span></div><div class="modal-warning" style="margin-top: 16px;">Only choose the 'Friends and Family' option when sending.</div></div></div></div>
-            <div id="withdraw-modal" class="modal slide-from-top"><div class="modal-content"><div class="modal-header"><h2>Withdraw</h2><span class="modal-close-btn">&times;</span></div><input type="text" class="form-input" placeholder="Enter your BTC wallet address"><input type="number" class="form-input" placeholder="Amount (Min: $10, Max: $10,000)" min="10" max="10000"><div class="top-buttons-container"><button id="confirm-withdrawal-btn" class="top-action-btn" style="background-color: var(--positive-green);">Confirm</button><button class="top-action-btn modal-close-btn-alt" style="background-color: var(--negative-red);">Cancel</button></div></div></div>
+                <div id="deposit-amount-modal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header"><h2>Crypto Deposit</h2><span class="modal-close-btn">&times;</span></div>
+                        <p style="color: var(--secondary-text); font-size: 14px; line-height: 1.5; margin-bottom: 16px;">Enter the amount in USD you would like to deposit. You will be redirected to complete the payment with cryptocurrency.</p>
+                        <input id="deposit-amount-input" type="number" class="form-input" placeholder="e.g., 50.00" min="1">
+                        <button id="confirm-deposit-btn" class="top-action-btn" style="background-color: var(--positive-green);">Confirm Deposit</button>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // MODIFIED: Entire script is wrapped in an async function to handle auth
         document.addEventListener('DOMContentLoaded', async () => {
-            
-            // --- Supabase Client Initialization ---
             const SUPABASE_URL = 'https://vbxojcdlctuakzxwbjsr.supabase.co';
             const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZieG9qY2RsY3R1YWt6eHdianNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI5NzE3OTcsImV4cCI6MjA2ODU0Nzc5N30.2ahS1261ZAAlOoqtB94Zjm1HzCBTbPw4_5DdmXXvjD0';
             const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-            // --- 1. Protect Route & Fetch Data ---
             const { data: { session } } = await supabaseClient.auth.getSession();
             if (!session) {
-                window.location.href = 'index.html'; // Or your login page
+                window.location.href = 'index.html';
                 return;
             }
 
             const user = session.user;
             const { data: profile, error: profileError } = await supabaseClient
                 .from('profiles')
-                .select('username, balance')
+                .select('username, main_balance, bonus_balance, successful_referrals_count, referral_code')
                 .eq('id', user.id)
                 .single();
             
             if (profileError) {
                 console.error('Error fetching user profile:', profileError);
-                // Handle error, maybe show a message and log out
                 alert('Could not load your profile. Please log in again.');
                 await supabaseClient.auth.signOut();
                 window.location.href = 'index.html';
                 return;
             }
             
-            // --- 2. Initialize the Dashboard with User Data ---
             document.body.style.visibility = 'visible';
             initializeDashboard(user, profile);
         });
 
         function initializeDashboard(user, profile) {
-            // --- Get All DOM Elements ---
-            const allModals = document.querySelectorAll('.modal');
-            const cryptoGrid = document.getElementById('crypto-grid');
-            const toastNotification = document.getElementById('toast-notification');
-            const balanceElement = document.querySelector('.top-balance-amount');
-
-            // Buttons
+            // Get existing elements
+            const mainBalanceElement = document.getElementById('main-balance');
+            const bonusBalanceElement = document.getElementById('bonus-balance');
+            const referralCountElement = document.getElementById('referral-count');
+            const menuReferBtn = document.getElementById('menu-refer-btn');
             const menuBtn = document.getElementById('menu-btn');
-            const menuLogoutBtn = document.getElementById('menu-logout-btn'); // MODIFIED
+            const menuLogoutBtn = document.getElementById('menu-logout-btn');
+            const toastNotification = document.getElementById('toast-notification');
+            const allModals = document.querySelectorAll('.modal');
+            
+            // MODIFIED: Get new elements for deposit flow
             const topDepositBtn = document.getElementById('top-deposit-btn');
-            const topWithdrawBtn = document.getElementById('top-withdraw-btn');
-            // ... (rest of your button declarations are fine)
-            const topVipBtn = document.getElementById('top-vip-btn');
-            const manageAssetsBtn = document.getElementById('manage-assets-btn');
-            const cryptoAssetBtn = document.getElementById('crypto-asset-btn');
-            const cashAssetBtn = document.getElementById('cash-asset-btn');
-            const menuPendingTxBtn = document.getElementById('menu-pending-tx');
-            const menuSuccessfulTxBtn = document.getElementById('menu-successful-tx');
-            const cryptoDepositOptionBtn = document.getElementById('crypto-deposit-option-btn');
-            const cashDepositOptionBtn = document.getElementById('cash-deposit-option-btn');
-            const wireTransferOptionBtn = document.getElementById('wire-transfer-option-btn');
-            const paypalOptionBtn = document.getElementById('paypal-option-btn');
-            const confirmWithdrawalBtn = document.getElementById('confirm-withdrawal-btn');
-
+            const depositAmountModal = document.getElementById('deposit-amount-modal');
+            const depositAmountInput = document.getElementById('deposit-amount-input');
+            const confirmDepositBtn = document.getElementById('confirm-deposit-btn');
 
             // --- Utility Functions ---
             const showToast = (message, duration = 3000) => {
                 toastNotification.textContent = message;
                 toastNotification.classList.add('show');
-                setTimeout(() => {
-                    toastNotification.classList.remove('show');
-                }, duration);
+                setTimeout(() => { toastNotification.classList.remove('show'); }, duration);
             };
 
-            const copyToClipboard = async (elementId, feedbackText = "Copied!") => {
-                const textToCopy = document.getElementById(elementId).innerText;
-                try {
-                    await navigator.clipboard.writeText(textToCopy);
-                    showToast(feedbackText, 2000);
-                } catch (err) {
-                    console.error('Failed to copy: ', err);
-                    showToast("Failed to copy", 2000);
-                }
-            };
-            
-            // --- Modal Control ---
-            const closeAllModals = () => allModals.forEach(m => m.classList.remove('show'));
             const openModal = (modal) => {
-                closeAllModals();
-                modal.classList.add('show');
+                allModals.forEach(m => m.classList.remove('show'));
+                if (modal) modal.classList.add('show');
             };
             
-            document.querySelectorAll('.modal-close-btn, .modal-close-btn-alt').forEach(btn => btn.addEventListener('click', closeAllModals));
+            document.querySelectorAll('.modal-close-btn').forEach(btn => btn.addEventListener('click', () => allModals.forEach(m => m.classList.remove('show'))));
 
             // --- Event Listeners ---
             menuBtn.addEventListener('click', () => openModal(document.getElementById('menu-modal')));
             
-            // MODIFIED: Logout Logic
             menuLogoutBtn.addEventListener('click', async () => {
                 await supabaseClient.auth.signOut();
-                window.location.href = 'index.html'; // Redirect to login page
+                window.location.href = 'index.html';
             });
             
-            // ... (rest of your event listeners are fine)
-            menuPendingTxBtn.addEventListener('click', () => openModal(document.getElementById('pending-tx-modal')));
-            menuSuccessfulTxBtn.addEventListener('click', () => openModal(document.getElementById('successful-tx-modal')));
-            topVipBtn.addEventListener('click', () => openModal(document.getElementById('vip-modal')));
-            manageAssetsBtn.addEventListener('click', () => openModal(document.getElementById('manage-assets-modal')));
-            topDepositBtn.addEventListener('click', () => openModal(document.getElementById('deposit-modal')));
-            cryptoAssetBtn.addEventListener('click', () => openModal(document.getElementById('crypto-deposit-modal')));
-            cashAssetBtn.addEventListener('click', () => openModal(document.getElementById('cash-deposit-modal')));
-            cryptoDepositOptionBtn.addEventListener('click', () => openModal(document.getElementById('crypto-deposit-modal')));
-            cashDepositOptionBtn.addEventListener('click', () => openModal(document.getElementById('cash-deposit-modal')));
-            wireTransferOptionBtn.addEventListener('click', () => openModal(document.getElementById('wire-transfer-modal')));
-            paypalOptionBtn.addEventListener('click', () => {
-                const paypalModal = document.getElementById('paypal-generator-modal');
-                openModal(paypalModal);
-                const generatorDiv = document.getElementById('paypal-generator');
-                const resultDiv = document.getElementById('paypal-result');
-                generatorDiv.style.display = 'block';
-                resultDiv.style.display = 'none';
-                setTimeout(() => {
-                    generatorDiv.style.display = 'none';
-                    resultDiv.style.display = 'block';
-                }, 2000);
-            });
-            topWithdrawBtn.addEventListener('click', () => openModal(document.getElementById('withdraw-modal')));
-            confirmWithdrawalBtn.addEventListener('click', () => {
-                closeAllModals();
-                showToast("Withdrawal cannot be completed. Contact support or try again in 30 mins.", 5000);
-            });
-            document.querySelectorAll('.copy-btn').forEach(btn => {
-                btn.addEventListener('click', () => copyToClipboard(btn.dataset.copyTarget));
+            menuReferBtn.addEventListener('click', () => {
+                const referralModal = document.getElementById('referral-modal');
+                const referralLinkText = document.getElementById('referral-link-text');
+                const yourSiteUrl = 'https://sbafg.netlify.app'; 
+                const referralLink = `${yourSiteUrl}/index.html?ref=${profile.referral_code}`;
+                referralLinkText.textContent = referralLink;
+                openModal(referralModal);
             });
 
-            // --- Crypto Price Fetching Logic ---
-            async function fetchCryptoPrices() {
-                if (!cryptoGrid) return;
-                const coinIds = 'bitcoin,ethereum,tether,solana,binancecoin,ripple';
-                const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${coinIds}&order=market_cap_desc&per_page=6&page=1&sparkline=false&price_change_percentage=24h`;
-                try {
-                    const response = await fetch(url);
-                    if (!response.ok) throw new Error('Network response was not ok');
-                    const data = await response.json();
-                    cryptoGrid.innerHTML = '';
-                    data.forEach(coin => {
-                        const changeClass = coin.price_change_percentage_24h_in_currency >= 0 ? 'positive' : 'negative';
-                        cryptoGrid.innerHTML += `
-                            <div class="crypto-card">
-                                <div class="crypto-card-header">
-                                    <img src="${coin.image}" alt="${coin.name}" class="crypto-logo">
-                                    <span class="crypto-symbol">${coin.symbol}</span>
-                                </div>
-                                <div class="crypto-price">$${coin.current_price.toLocaleString('en-US')}</div>
-                                <div class="crypto-change ${changeClass}">${coin.price_change_percentage_24h_in_currency.toFixed(2)}%</div>
-                            </div>`;
-                    });
-                } catch (error) {
-                    console.error("Failed to fetch crypto prices:", error);
-                    cryptoGrid.innerHTML = `<p style="grid-column: 1 / -1; text-align: center;">Could not load market data.</p>`;
+            // MODIFIED: Deposit button listeners
+            topDepositBtn.addEventListener('click', () => {
+                openModal(depositAmountModal);
+            });
+
+            confirmDepositBtn.addEventListener('click', async () => {
+                const amount = parseFloat(depositAmountInput.value);
+                if (!amount || amount < 1) { // Set a minimum deposit amount
+                    alert('Please enter a valid amount (e.g., at least $1).');
+                    return;
                 }
-            }
 
+                confirmDepositBtn.disabled = true;
+                confirmDepositBtn.textContent = 'Creating Invoice...';
+
+                // Call your Edge Function to create the payment invoice
+                const { data, error } = await supabaseClient.functions.invoke('create-nowpayments-payment', {
+                    body: { 
+                        amount: amount,
+                        userId: user.id
+                    }
+                });
+
+                if (error) {
+                    console.error('Error creating payment invoice:', error);
+                    alert('Could not start the deposit process. Please try again.');
+                    confirmDepositBtn.disabled = false;
+                    confirmDepositBtn.textContent = 'Confirm Deposit';
+                    return;
+                }
+
+                // Redirect the user to the NOWPayments invoice page to pay
+                window.location.href = data.invoice_url;
+            });
+            
             // --- INITIALIZATION ---
-            function showGreeting() {
+            mainBalanceElement.textContent = `$${parseFloat(profile.main_balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            bonusBalanceElement.textContent = `Bonus: $${parseFloat(profile.bonus_balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            referralCountElement.textContent = profile.successful_referrals_count;
+            
+            const showGreeting = () => {
                 const currentHour = new Date().getHours();
                 let greeting = "Welcome";
                 if (currentHour < 12) greeting = "Good morning";
                 else if (currentHour < 18) greeting = "Good afternoon";
                 else greeting = "Good evening";
-
-                // MODIFIED: Personalized Greeting
                 const displayName = profile.username || user.email;
                 showToast(`${greeting}, ${displayName}!`, 3000);
-            }
-            
-            // MODIFIED: Update UI with profile data
-            balanceElement.textContent = `$${parseFloat(profile.balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            };
             
             showGreeting();
-            fetchCryptoPrices(); 
-            setInterval(fetchCryptoPrices, 300000); // Refresh every 5 minutes
         }
     </script>
 </body>

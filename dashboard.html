@@ -181,7 +181,8 @@
 
                 <section class="crypto-market-section">
                     <h2>Markets</h2>
-                    <div id="crypto-grid" class="crypto-grid"></div>
+                    <div id="crypto-grid" class="crypto-grid">
+                        </div>
                 </section>
             </div>
             
@@ -240,7 +241,7 @@
         });
 
         function initializeDashboard(user, profile) {
-            // --- Get All DOM Elements ---
+            // Get All DOM Elements
             const allModals = document.querySelectorAll('.modal');
             const cryptoGrid = document.getElementById('crypto-grid');
             const toastNotification = document.getElementById('toast-notification');
@@ -266,7 +267,7 @@
             const confirmWithdrawalBtn = document.getElementById('confirm-withdrawal-btn');
             const cancelWithdrawalBtn = document.getElementById('cancel-withdrawal-btn');
             
-            // --- Utility Functions ---
+            // Utility Functions
             const showToast = (message, duration = 3000) => {
                 toastNotification.textContent = message;
                 toastNotification.classList.add('show');
@@ -279,28 +280,24 @@
             const closeModal = () => allModals.forEach(m => m.classList.remove('show'));
             document.querySelectorAll('.modal-close-btn').forEach(btn => btn.addEventListener('click', closeModal));
 
-            // --- Event Listeners ---
+            // Event Listeners
             menuBtn.addEventListener('click', () => openModal(document.getElementById('menu-modal')));
             
-            // MODIFIED: All new feature logic
-            // VIP Logic
+            // New Feature Logic
             topVipBtn.addEventListener('click', () => openModal(document.getElementById('vip-modal')));
             document.querySelectorAll('.vip-deposit-option').forEach(btn => {
                 btn.addEventListener('click', () => openModal(depositAmountModal));
             });
 
-            // Manage Assets Logic
             manageAssetsBtn.addEventListener('click', () => {
                 document.getElementById('manage-main-balance').textContent = `$${parseFloat(profile.main_balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
                 document.getElementById('manage-bonus-balance').textContent = `$${parseFloat(profile.bonus_balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
                 openModal(document.getElementById('manage-assets-modal'));
             });
 
-            // Withdraw Logic
             const handleWithdrawalValidation = () => {
                 const mainBalance = parseFloat(profile.main_balance);
                 const requestedAmount = parseFloat(withdrawAmountInput.value);
-
                 if (mainBalance < 50) {
                     confirmWithdrawalBtn.disabled = true;
                     showToast("Balance is below the $50.00 minimum for withdrawal.", 3000);
@@ -321,7 +318,6 @@
             });
             cancelWithdrawalBtn.addEventListener('click', closeModal);
 
-            // Crypto and Cash Asset Button Logic
             document.getElementById('crypto-asset-balance').textContent = `$${parseFloat(profile.main_balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
             document.getElementById('cash-asset-balance').textContent = `$${parseFloat(profile.bonus_balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
             cryptoAssetBtn.addEventListener('click', () => {
@@ -333,11 +329,9 @@
                 openModal(document.getElementById('cash-asset-modal'));
             });
 
-            // Transaction History Buttons
             menuPendingTxBtn.addEventListener('click', () => openModal(document.getElementById('pending-tx-modal')));
             menuSuccessfulTxBtn.addEventListener('click', () => openModal(document.getElementById('successful-tx-modal')));
             
-            // Existing Supabase Listeners
             menuLogoutBtn.addEventListener('click', async () => {
                 await supabaseClient.auth.signOut();
                 window.location.href = 'index.html';
@@ -376,15 +370,66 @@
                 confirmDepositBtn.textContent = 'Get Payment Address';
             });
             
-            document.querySelectorAll('.copy-btn').forEach(btn => btn.addEventListener('click', () => { /* ... copy logic ... */ }));
+            document.querySelectorAll('.copy-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                     const targetId = btn.dataset.copyTarget;
+                     const textToCopy = document.getElementById(targetId).innerText;
+                     navigator.clipboard.writeText(textToCopy).then(() => {
+                        showToast("Copied!", 2000);
+                     }).catch(err => console.error('Failed to copy', err));
+                });
+            });
 
-            // Crypto Price Fetching Logic
-            async function fetchCryptoPrices() { /* ... your existing fetch logic ... */ }
+            // MODIFIED: Added crypto price fetching logic
+            async function fetchCryptoPrices() {
+                if (!cryptoGrid) return;
+                const coinIds = 'bitcoin,ethereum,tether,solana,binance-coin,ripple';
+                const url = `https://api.coingecko.com/api/v3/simple/price?ids=${coinIds}&vs_currencies=usd&include_24hr_change=true`;
+                
+                // A helper to get full coin data for logos
+                const coinDataMap = {
+                    'bitcoin': { symbol: 'BTC', logo: 'https://assets.coingecko.com/coins/images/1/large/bitcoin.png' },
+                    'ethereum': { symbol: 'ETH', logo: 'https://assets.coingecko.com/coins/images/279/large/ethereum.png' },
+                    'tether': { symbol: 'USDT', logo: 'https://assets.coingecko.com/coins/images/325/large/Tether.png' },
+                    'solana': { symbol: 'SOL', logo: 'https://assets.coingecko.com/coins/images/4128/large/solana.png' },
+                    'binance-coin': { symbol: 'BNB', logo: 'https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png' },
+                    'ripple': { symbol: 'XRP', logo: 'https://assets.coingecko.com/coins/images/44/large/xrp-symbol-white-128.png' }
+                };
+
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    const data = await response.json();
+                    
+                    cryptoGrid.innerHTML = ''; // Clear previous cards
+                    
+                    for (const id in data) {
+                        const coin = data[id];
+                        const change = coin.usd_24h_change || 0;
+                        const changeClass = change >= 0 ? 'positive' : 'negative';
+                        const coinInfo = coinDataMap[id.replace('-coin', '')]; // Handle 'binance-coin' mismatch
+
+                        cryptoGrid.innerHTML += `
+                            <div class="crypto-card">
+                                <div class="crypto-card-header">
+                                    <img src="${coinInfo.logo}" alt="${id}" class="crypto-logo">
+                                    <span class="crypto-symbol">${coinInfo.symbol}</span>
+                                </div>
+                                <div class="crypto-price">$${coin.usd.toLocaleString('en-US')}</div>
+                                <div class="crypto-change ${changeClass}">${change.toFixed(2)}%</div>
+                            </div>`;
+                    }
+                } catch (error) {
+                    console.error("Failed to fetch crypto prices:", error);
+                    cryptoGrid.innerHTML = `<p style="grid-column: 1 / -1; text-align: center;">Could not load market data.</p>`;
+                }
+            }
 
             // --- INITIALIZATION ---
             mainBalanceElement.textContent = `$${parseFloat(profile.main_balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
             bonusBalanceElement.textContent = `Bonus: $${parseFloat(profile.bonus_balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
             referralCountElement.textContent = profile.successful_referrals_count;
+            
             function showGreeting() {
                 const currentHour = new Date().getHours();
                 let greeting = "Welcome";
@@ -394,9 +439,10 @@
                 const displayName = profile.username || user.email;
                 showToast(`${greeting}, ${displayName}!`, 3000);
             }
+            
             showGreeting();
-            fetchCryptoPrices(); 
-            setInterval(fetchCryptoPrices, 300000);
+            fetchCryptoPrices(); // Run on load
+            setInterval(fetchCryptoPrices, 1800000); // Refresh every 30 minutes
         }
     </script>
 </body>

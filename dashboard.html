@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SBAFG Wallet</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <style>
         :root {
             --background-dark: #000000;
@@ -14,14 +15,6 @@
             --secondary-text: #a8a8a8;
             --positive-green: #059669;
             --negative-red: #DC2626;
-            --warning-bg: #4d3800;
-            --warning-text: #ffeb87;
-            --border-color: #2d2d2d;
-            --bronze: #cd7f32;
-            --silver: #c0c0c0;
-            --gold: #ffd700;
-            --platinum: #e5e4e2;
-            --diamond: #b9f2ff;
         }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -34,7 +27,6 @@
             min-height: 100vh;
             padding: 20px;
             box-sizing: border-box;
-            /* MODIFIED: Initially hidden to prevent content flash */
             visibility: hidden;
         }
         .mobile-mockup {
@@ -97,14 +89,6 @@
         .crypto-market-section { margin-top: 24px; }
         .crypto-market-section h2 { font-size: 20px; margin-bottom: 16px; padding-left: 8px; }
         .crypto-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-        .crypto-card { display: flex; flex-direction: column; gap: 8px; background-color: var(--surface-dark); padding: 16px; border-radius: 12px; }
-        .crypto-card-header { display: flex; align-items: center; gap: 8px; }
-        .crypto-logo { width: 24px; height: 24px; }
-        .crypto-symbol { font-size: 16px; font-weight: 600; text-transform: uppercase; }
-        .crypto-price { font-size: 18px; font-weight: 500; }
-        .crypto-change { font-size: 14px; font-weight: 500; }
-        .positive { color: var(--positive-green); }
-        .negative { color: var(--negative-red); }
         .modal { display: none; position: absolute; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); justify-content: center; align-items: center; padding: 16px; box-sizing: border-box; }
         .modal.show { display: flex; }
         .modal-content { background-color: var(--surface-dark); padding: 20px; border-radius: 16px; width: 100%; max-width: 450px; display: flex; flex-direction: column; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
@@ -113,9 +97,6 @@
         .modal-close-btn { font-size: 28px; font-weight: bold; cursor: pointer; color: var(--secondary-text); position: absolute; top: 10px; right: 20px; }
         .modal-list { list-style: none; padding: 0; margin: 0; }
         .modal-list li { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border-color); gap: 16px; }
-        .modal-list li:last-child { border-bottom: none; }
-        .modal-list .item-info { flex-grow: 1; }
-        .modal-list .item-name { font-weight: bold; }
         .modal.sidebar { justify-content: flex-start; align-items: flex-start; background-color: rgba(0,0,0,0.5); }
         .modal.sidebar .modal-content { width: 75%; max-width: 350px; height: 100%; border-radius: 0; transform: translateX(-100%); transition: transform 0.3s ease-in-out; }
         .modal.sidebar.show .modal-content { transform: translateX(0); }
@@ -126,6 +107,7 @@
         .form-input { width: 100%; background-color: var(--background-dark); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; font-size: 16px; color: var(--primary-text); box-sizing: border-box; margin-top: 16px; margin-bottom: 16px; }
         .greeting-toast { position: fixed; top: 70px; left: 50%; transform: translateX(-50%); background-color: rgba(44, 44, 46, 0.9); color: var(--primary-text); padding: 12px 24px; border-radius: 20px; z-index: 2000; opacity: 0; transition: opacity 0.5s ease-in-out, top 0.5s ease-in-out; pointer-events: none; font-size: 16px; font-weight: 500; text-align: center; }
         .greeting-toast.show { top: 85px; opacity: 1; }
+        .qr-code-container { display: flex; justify-content: center; margin: 20px 0; background-color: white; padding: 10px; border-radius: 8px; }
         @media (max-width: 480px) {
             body { padding: 0; }
             .mobile-mockup { width: 100vw; height: 100vh; max-width: none; max-height: none; border-radius: 0; border: none; padding: 0; }
@@ -147,7 +129,7 @@
                 <div class="top-header">
                     <button id="menu-btn" class="menu-button"><i class="fa-solid fa-bars"></i></button>
                 </div>
-
+                
                 <div class="top-bar-box">
                     <p class="balance-label">Main Balance</p>
                     <div id="main-balance" class="main-balance-amount">$0.00</div>
@@ -188,7 +170,7 @@
                     </ul>
                 </div>
             </div>
-
+            
             <div id="referral-modal" class="modal">
                 <div class="modal-content">
                     <div class="modal-header"><h2>Refer a Friend</h2><span class="modal-close-btn">&times;</span></div>
@@ -203,18 +185,33 @@
             <div id="deposit-amount-modal" class="modal">
                 <div class="modal-content">
                     <div class="modal-header"><h2>Crypto Deposit</h2><span class="modal-close-btn">&times;</span></div>
-                    <p style="color: var(--secondary-text); font-size: 14px; line-height: 1.5; margin-bottom: 16px;">Enter the amount in USD you would like to deposit. You will be redirected to complete the payment with cryptocurrency.</p>
+                    <p style="color: var(--secondary-text); font-size: 14px; line-height: 1.5; margin-bottom: 16px;">Enter the amount in USD you would like to deposit.</p>
                     <input id="deposit-amount-input" type="number" class="form-input" placeholder="e.g., 50.00" min="1">
-                    <button id="confirm-deposit-btn" class="top-action-btn" style="background-color: var(--positive-green);">Confirm Deposit</button>
+                    <button id="confirm-deposit-btn" class="top-action-btn" style="background-color: var(--positive-green);">Get Payment Address</button>
                 </div>
             </div>
 
-        </div>
+            <div id="payment-details-modal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header"><h2>Complete Your Deposit</h2><span class="modal-close-btn">&times;</span></div>
+                    <p style="text-align: center; color: var(--secondary-text);">Scan the QR code or copy the details below to pay.</p>
+                    <div class="qr-code-container" id="qrcode"></div>
+                    <div class="deposit-address-container">
+                        <span class="address-text">Amount: <strong id="payment-amount"></strong></span>
+                        <button class="copy-btn" data-copy-target="payment-amount">Copy</button>
+                    </div>
+                    <div class="deposit-address-container" style="margin-top: 12px;">
+                        <span class="address-text">Address: <strong id="payment-address"></strong></span>
+                        <button class="copy-btn" data-copy-target="payment-address">Copy</button>
+                    </div>
+                </div>
+            </div>
+
+            </div>
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // MODIFIED: Entire script is now integrated with Supabase
         document.addEventListener('DOMContentLoaded', async () => {
             const SUPABASE_URL = 'https://vbxojcdlctuakzxwbjsr.supabase.co';
             const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZieG9qY2RsY3R1YWt6eHdianNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI5NzE3OTcsImV4cCI6MjA2ODU0Nzc5N30.2ahS1261ZAAlOoqtB94Zjm1HzCBTbPw4_5DdmXXvjD0';
@@ -243,109 +240,140 @@
             
             document.body.style.visibility = 'visible';
             initializeDashboard(user, profile);
+        });
 
-            // This is the function that contains all your page's logic
-            function initializeDashboard(user, profile) {
-                // Get All DOM Elements
-                const allModals = document.querySelectorAll('.modal');
-                const cryptoGrid = document.getElementById('crypto-grid');
-                const toastNotification = document.getElementById('toast-notification');
-                const mainBalanceElement = document.getElementById('main-balance');
-                const bonusBalanceElement = document.getElementById('bonus-balance');
-                const menuBtn = document.getElementById('menu-btn');
-                const topDepositBtn = document.getElementById('top-deposit-btn');
-                
-                // MODIFIED: Get all new elements
-                const menuLogoutBtn = document.getElementById('menu-logout-btn');
-                const menuReferBtn = document.getElementById('menu-refer-btn');
-                const referralCountElement = document.getElementById('referral-count');
-                const depositAmountModal = document.getElementById('deposit-amount-modal');
-                const depositAmountInput = document.getElementById('deposit-amount-input');
-                const confirmDepositBtn = document.getElementById('confirm-deposit-btn');
+        // MODIFIED: Wrapped all your logic in the initializeDashboard function
+        // to ensure it only runs after the user profile is loaded.
+        function initializeDashboard(user, profile) {
+            // --- Get All DOM Elements ---
+            const allModals = document.querySelectorAll('.modal');
+            const cryptoGrid = document.getElementById('crypto-grid');
+            const toastNotification = document.getElementById('toast-notification');
+            const mainBalanceElement = document.getElementById('main-balance');
+            const bonusBalanceElement = document.getElementById('bonus-balance');
+            const menuBtn = document.getElementById('menu-btn');
+            const topDepositBtn = document.getElementById('top-deposit-btn');
+            
+            // Newly added elements
+            const menuLogoutBtn = document.getElementById('menu-logout-btn');
+            const menuReferBtn = document.getElementById('menu-refer-btn');
+            const referralCountElement = document.getElementById('referral-count');
+            const depositAmountModal = document.getElementById('deposit-amount-modal');
+            const depositAmountInput = document.getElementById('deposit-amount-input');
+            const confirmDepositBtn = document.getElementById('confirm-deposit-btn');
 
-                // Utility Functions (Your existing code)
-                const showToast = (message, duration = 3000) => {
-                    toastNotification.textContent = message;
-                    toastNotification.classList.add('show');
-                    setTimeout(() => { toastNotification.classList.remove('show'); }, duration);
-                };
+            // --- Utility Functions (Your existing code) ---
+            const showToast = (message, duration = 3000) => {
+                toastNotification.textContent = message;
+                toastNotification.classList.add('show');
+                setTimeout(() => { toastNotification.classList.remove('show'); }, duration);
+            };
 
-                const openModal = (modal) => {
-                    allModals.forEach(m => m.classList.remove('show'));
-                    if (modal) modal.classList.add('show');
-                };
-                
-                document.querySelectorAll('.modal-close-btn, .modal-close-btn-alt').forEach(btn => btn.addEventListener('click', () => allModals.forEach(m => m.classList.remove('show'))));
+            const openModal = (modal) => {
+                allModals.forEach(m => m.classList.remove('show'));
+                if (modal) modal.classList.add('show');
+            };
+            
+            document.querySelectorAll('.modal-close-btn, .modal-close-btn-alt').forEach(btn => btn.addEventListener('click', () => allModals.forEach(m => m.classList.remove('show'))));
 
-                // Event Listeners (Your existing code)
-                menuBtn.addEventListener('click', () => openModal(document.getElementById('menu-modal')));
-                // ... (add other modal open listeners here if needed)
+            const copyToClipboard = async (elementId, feedbackText = "Copied!") => {
+                const textToCopy = document.getElementById(elementId).innerText;
+                try {
+                    await navigator.clipboard.writeText(textToCopy);
+                    showToast(feedbackText, 2000);
+                } catch (err) {
+                    console.error('Failed to copy: ', err);
+                }
+            };
+            document.querySelectorAll('.copy-btn').forEach(btn => {
+                btn.addEventListener('click', () => copyToClipboard(btn.dataset.copyTarget));
+            });
 
-                // MODIFIED: Added all necessary Supabase functionality
-                menuLogoutBtn.addEventListener('click', async () => {
-                    await supabaseClient.auth.signOut();
-                    window.location.href = 'index.html';
+            // --- Event Listeners (Your existing listeners + new ones) ---
+            menuBtn.addEventListener('click', () => openModal(document.getElementById('menu-modal')));
+            // ... (your other modal open listeners can be re-added here if needed)
+
+            // --- All Supabase-related Logic ---
+            menuLogoutBtn.addEventListener('click', async () => {
+                await supabaseClient.auth.signOut();
+                window.location.href = 'index.html';
+            });
+
+            menuReferBtn.addEventListener('click', () => {
+                const referralModal = document.getElementById('referral-modal');
+                const referralLinkText = document.getElementById('referral-link-text');
+                const yourSiteUrl = 'https://sbafg.netlify.app'; 
+                const referralLink = `${yourSiteUrl}/index.html?ref=${profile.referral_code}`;
+                referralLinkText.textContent = referralLink;
+                openModal(referralModal);
+            });
+
+            topDepositBtn.addEventListener('click', () => {
+                openModal(depositAmountModal);
+            });
+
+            confirmDepositBtn.addEventListener('click', async () => {
+                const amount = parseFloat(depositAmountInput.value);
+                if (!amount || amount < 1) {
+                    alert('Please enter a valid amount (at least $1).');
+                    return;
+                }
+                confirmDepositBtn.disabled = true;
+                confirmDepositBtn.textContent = 'Generating...';
+
+                const { data, error } = await supabaseClient.functions.invoke('create-nowpayments-payment', {
+                    body: { amount: amount, userId: user.id }
                 });
 
-                menuReferBtn.addEventListener('click', () => {
-                    const referralModal = document.getElementById('referral-modal');
-                    const referralLinkText = document.getElementById('referral-link-text');
-                    const yourSiteUrl = 'https://sbafg.netlify.app'; 
-                    const referralLink = `${yourSiteUrl}/index.html?ref=${profile.referral_code}`;
-                    referralLinkText.textContent = referralLink;
-                    openModal(referralModal);
-                });
-
-                topDepositBtn.addEventListener('click', () => {
-                    openModal(depositAmountModal);
-                });
-
-                confirmDepositBtn.addEventListener('click', async () => {
-                    const amount = parseFloat(depositAmountInput.value);
-                    if (!amount || amount < 1) {
-                        alert('Please enter a valid deposit amount (at least $1).');
-                        return;
-                    }
-                    confirmDepositBtn.disabled = true;
-                    confirmDepositBtn.textContent = 'Creating Invoice...';
-
-                    const { data, error } = await supabaseClient.functions.invoke('create-nowpayments-payment', {
-                        body: { amount: amount, userId: user.id }
-                    });
-
-                    if (error) {
-                        console.error('Error creating payment invoice:', error);
-                        alert('Could not start the deposit process. Please try again.');
-                        confirmDepositBtn.disabled = false;
-                        confirmDepositBtn.textContent = 'Confirm Deposit';
-                        return;
-                    }
-                    window.location.href = data.invoice_url;
-                });
-
-                // Crypto Price Fetching Logic (Your existing code)
-                async function fetchCryptoPrices() { /* ... your fetch logic ... */ }
-
-                // --- INITIALIZATION ---
-                mainBalanceElement.textContent = `$${parseFloat(profile.main_balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-                bonusBalanceElement.textContent = `Bonus: $${parseFloat(profile.bonus_balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-                referralCountElement.textContent = profile.successful_referrals_count;
-                
-                function showGreeting() {
-                    const currentHour = new Date().getHours();
-                    let greeting = "Welcome";
-                    if (currentHour < 12) greeting = "Good morning";
-                    else if (currentHour < 18) greeting = "Good afternoon";
-                    else greeting = "Good evening";
-                    const displayName = profile.username || user.email;
-                    showToast(`${greeting}, ${displayName}!`, 3000);
+                if (error) {
+                    alert('Could not start the deposit process. Please try again.');
+                    confirmDepositBtn.disabled = false;
+                    confirmDepositBtn.textContent = 'Get Payment Address';
+                    return;
                 }
                 
-                showGreeting();
-                fetchCryptoPrices(); 
-                setInterval(fetchCryptoPrices, 300000);
+                const paymentDetailsModal = document.getElementById('payment-details-modal');
+                const paymentAmountEl = document.getElementById('payment-amount');
+                const paymentAddressEl = document.getElementById('payment-address');
+                const qrcodeContainer = document.getElementById('qrcode');
+
+                paymentAmountEl.textContent = `${data.pay_amount} ${data.pay_currency.toUpperCase()}`;
+                paymentAddressEl.textContent = data.pay_address;
+                
+                qrcodeContainer.innerHTML = "";
+                new QRCode(qrcodeContainer, {
+                    text: `${data.pay_currency}:${data.pay_address}?amount=${data.pay_amount}`,
+                    width: 128,
+                    height: 128,
+                });
+                
+                openModal(paymentDetailsModal);
+                confirmDepositBtn.disabled = false;
+                confirmDepositBtn.textContent = 'Get Payment Address';
+            });
+
+            // --- Crypto Price Fetching Logic (Your existing code) ---
+            async function fetchCryptoPrices() { /* ... your fetch logic ... */ }
+
+            // --- INITIALIZATION ---
+            mainBalanceElement.textContent = `$${parseFloat(profile.main_balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            bonusBalanceElement.textContent = `Bonus: $${parseFloat(profile.bonus_balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            referralCountElement.textContent = profile.successful_referrals_count;
+            
+            function showGreeting() {
+                const currentHour = new Date().getHours();
+                let greeting = "Welcome";
+                if (currentHour < 12) greeting = "Good morning";
+                else if (currentHour < 18) greeting = "Good afternoon";
+                else greeting = "Good evening";
+                const displayName = profile.username || user.email;
+                showToast(`${greeting}, ${displayName}!`, 3000);
             }
-        });
+            
+            showGreeting();
+            fetchCryptoPrices(); 
+            setInterval(fetchCryptoPrices, 300000);
+        }
     </script>
 </body>
 </html>
